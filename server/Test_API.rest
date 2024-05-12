@@ -1,0 +1,13 @@
+###
+GET http://localhost:5000/todos
+
+###
+GET http://localhost:3000/users
+
+###
+POST http://localhost:5000/todos Content-Type: application/json
+
+{
+    "id": 2,
+    "name": "luck"
+}
