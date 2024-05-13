@@ -1,6 +1,17 @@
 import { Navbar, Nav } from 'rsuite';
+import { useCookies } from 'react-cookie';
 
-const NavBar = () => (
+const NavBar = () => {
+  const [cookies, setCookie, removeCookie] = useCookies()
+
+  const singOut = () => {
+    removeCookie('userEmail')
+    removeCookie('userId')
+    removeCookie('authToken')
+    window.location.reload()
+  }
+
+ return (
   <Navbar appearance='inverse'>
     <Navbar.Brand div style={{ width: 260 }} href="#">PartyPlanner</Navbar.Brand>
     <Nav>
@@ -17,9 +28,9 @@ const NavBar = () => (
       </Nav.Menu>
     </Nav>
     <Nav pullRight>
-      <Nav.Item>Logout</Nav.Item>
+      <Nav.Item onClick={() => singOut()}>Logout</Nav.Item>
     </Nav>
   </Navbar>
-);
+)};
 
 export default NavBar;

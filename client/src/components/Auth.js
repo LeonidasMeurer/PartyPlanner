@@ -1,17 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { Button, Form, Input, ButtonToolbar } from 'rsuite';
+import { Button, Form, ButtonToolbar } from 'rsuite';
+import { useNavigate } from 'react-router-dom';
 
 
 const Auth = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(null);
+    const [cookies, setCookie] = useCookies(null);
+    const authToken = cookies.authToken
     const [isLogIn, setisLogIn] = useState(true);
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
     const [confirmPassword, setConfirmPassword] = useState(null);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
-    console.log(cookies)
+
+    useEffect(() => {
+        if (authToken) {
+          navigate('/', { replace: true });
+        }
+      }, [navigate, authToken])
 
     const viewLogin = (status) => {
         setError(null)
@@ -48,6 +56,7 @@ const Auth = () => {
         } else {
             setCookie('userEmail', data.email)
             setCookie('authToken', data.token)
+            setCookie('userId', data.userId)
         }
     }
 
@@ -59,7 +68,6 @@ const Auth = () => {
                 {isLogIn ? "Please log in!" : "Please sign up!"}
             </h3>
             <Form fluid>
-
                 <Form.Group>
                     <ButtonToolbar>
                         <Button
@@ -73,9 +81,10 @@ const Auth = () => {
                         >Login</Button>
                     </ButtonToolbar>
                 </Form.Group>
-                <Form.Group controlId="Email">
+                <Form.Group controlId="email">
                     <Form.ControlLabel>Email</Form.ControlLabel>
                     <Form.Control
+                        defaultValue={''}
                         name='email'
                         type="email"
                         placeholder='Email'
@@ -85,6 +94,7 @@ const Auth = () => {
                 <Form.Group controlId="Password">
                     <Form.ControlLabel>Password</Form.ControlLabel>
                     <Form.Control
+                        defaultValue={''}
                         name="password"
                         type="password"
                         autoComplete="off"
@@ -94,6 +104,7 @@ const Auth = () => {
                 {!isLogIn && <Form.Group controlId="confirmPassword">
                     <Form.ControlLabel>Password</Form.ControlLabel>
                     <Form.Control
+                        defaultValue={''}
                         name="confirmPassword"
                         type="password"
                         autoComplete="off"

@@ -5,10 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 
 const { Column, HeaderCell, Cell } = Table;
 
-const TeilnehmerTable = (v_id) => {
-    const [cookies, setCookie, removeCookie] = useCookies(null);
-    const authToken = cookies.authToken
-    const userEmail = cookies.userEmail
+const TeilnehmerTable = () => {
     const [teilnehmer, setTeilnehmer] = useState(undefined);
     const params = useParams();
 
@@ -35,7 +32,7 @@ const TeilnehmerTable = (v_id) => {
 
     return (
         <div style={{paddingLeft: "10px"}}>
-            <h2>Teilnehmer</h2>
+
 
             <Table
                 height={400}

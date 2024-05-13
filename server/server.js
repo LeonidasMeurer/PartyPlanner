@@ -33,12 +33,12 @@ app.post('/signup', async (req, res) => {
   const hashedPassword = bcrypt.hashSync(password, salt)
 
   try {
-    const singnUp = await pool.query(`INSERT INTO USERS (email, hashed_password) VALUES ($1, $2)`,
+    const users = await pool.query(`INSERT INTO USERS (email, hashed_password) VALUES ($1, $2) RETURNING *`,
       [email, hashedPassword])
 
       const token = jwt.sign({ email }, 'secret', { expiresIn: '1hr'})
 
-      res.json({email, token})
+      res.json({'email': users.rows[0].email, token, 'userId': users.rows[0].user_id})
 
   } catch (err) {
     console.error(err)
@@ -54,14 +54,15 @@ app.post('/login', async (req, res) => {
 
   try {
     const users = await pool.query('SELECT * FROM users WHERE email = $1', [email])
+    console.log(users.rows[0].user_id)
 
     if (!users.rows.length) return res.json({detail: 'User does not exist!'})
 
     const succes = await bcrypt.compare(password, users.rows[0].hashed_password)
-    const token = jwt.sign({ email }, 'secret', { expiresIn: '1hr'})
+    const token = jwt.sign({email} , 'secret', { expiresIn: '1hr'})
 
     if (succes) {
-      res.json({'email': users.rows[0].email, token})
+      res.json({'email': users.rows[0].email, token, 'userId': users.rows[0].user_id})
     } else {
       res.json({detail: 'Login failed!'})
     }
@@ -72,30 +73,66 @@ app.post('/login', async (req, res) => {
 })
 
 
-
-app.post("/todos", async (req, res) => {
+// Veranstaltungen
+// create Veranstaltung
+app.post("/veranstaltung", async (req, res) => {
   try {
-    const { description } = req.body;
-    const newTodo = await pool.query(
-      "INSERT INTO todo (description) VALUES($1) RETURNING *",
-      [description]
+    const { v_name, teilnehmer_anzahl, datum, beschreibung, user_name, ort, user_id } = req.body;
+    console.log(v_name, teilnehmer_anzahl, datum, beschreibung, user_name, ort, user_id)
+    const newVeranstaltung = await pool.query(
+      "INSERT INTO veranstaltung (v_name, teilnehmer_anzahl, datum, beschreibung, user_name, ort, user_id)VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+      [v_name, teilnehmer_anzahl, datum, beschreibung, user_name, ort, user_id]
     );
+    const veranstaltung_user = await pool.query(
+      "INSERT INTO veranstaltung_users (v_id, user_id, isadmin) VALUES ($1, $2, true)",
+      [newVeranstaltung.rows[0].v_id, user_id]
+    )
 
-    res.json(newTodo.rows[0]);
+    res.json(newVeranstaltung.rows[0]);
   } catch (err) {
     console.error(err.message);
   }
 });
 
 
-//get all veranstaltungen
-app.get("/veranstaltungen/:userEmail", async (req, res) => {
-  const { userEmail } = req.params
-  console.log(userEmail)
+// edit Veranstaltung
+app.put("/veranstaltung/:v_id", async (req, res) => {
+  try {
+    const { v_id } = req.params
+    const { v_name, teilnehmer_anzahl, datum, beschreibung, user_name, ort, user_id } = req.body;
+    console.log(v_name, teilnehmer_anzahl, datum, beschreibung, user_name, ort, user_id)
+    const editVeranstaltung = await pool.query(
+      "UPDATE veranstaltung SET v_name = $1, teilnehmer_anzahl = $2, datum = $3, beschreibung = $4, ort = $5 WHERE v_id = $6",
+      [v_name, teilnehmer_anzahl, datum, beschreibung, ort, v_id]
+    );
+    res.json(editVeranstaltung);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// delete Veranstaltung
+app.delete("/veranstaltung/:v_id", async (req, res) => {
+  try {
+    const { v_id } = req.params;
+    const deleteTodo = await pool.query("DELETE FROM veranstaltung WHERE v_id = $1", [
+      v_id
+    ]);
+    res.json("Todo was deleted!");
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
+
+//get all veranstaltungenuser_id
+app.get("/veranstaltungen/:userId", async (req, res) => {
+  const { userId } = req.params
+  console.log(userId)
 
   try {
-    const allTodos = await pool.query("SELECT * FROM veranstaltung WHERE v_id IN (SELECT veranstaltung FROM veranstaltung_users WHERE teilnehmer = $1)",
-    [userEmail]);
+    const allTodos = await pool.query("SELECT * FROM veranstaltung WHERE v_id IN (SELECT v_id FROM veranstaltung_users WHERE user_id = $1)",
+    [userId]);
     res.json(allTodos.rows);
     console.log(allTodos.rows)
   } catch (err) {
@@ -126,7 +163,7 @@ app.get("/veranstaltung_teilnehmer/:v_id", async (req, res) => {
   console.log(v_id)
 
   try {
-    const teilnehmer = await pool.query("SELECT email FROM users WHERE email IN (SELECT teilnehmer FROM veranstaltung_users WHERE veranstaltung = $1)",
+    const teilnehmer = await pool.query("SELECT email FROM users WHERE user_id IN (SELECT user_id FROM veranstaltung_users WHERE v_id = $1)",
     [v_id]);
     res.json(teilnehmer.rows);
     console.log(teilnehmer.rows)

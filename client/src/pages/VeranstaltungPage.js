@@ -7,6 +7,7 @@ import DashboardIcon from '@rsuite/icons/legacy/Dashboard';
 import GroupIcon from '@rsuite/icons/legacy/Group';
 import MagicIcon from '@rsuite/icons/legacy/Magic';
 import GearCircleIcon from '@rsuite/icons/legacy/GearCircle';
+import VeranstaltungModal from "../components/VeranstaltungModal";
 
 
 const VeranstaltungPage = () => {
@@ -17,7 +18,9 @@ const VeranstaltungPage = () => {
   const [veranstaltung, setVeranstaltung] = useState(undefined);
   const navigate = useNavigate();
   const [activeKey, setActiveKey] = useState('1');
+
   console.log(params.v_id)
+  console.log(veranstaltung)
 
   const getData = async () => {
     try {
@@ -55,10 +58,10 @@ const VeranstaltungPage = () => {
           <Sidenav appearance='inverse' defaultOpenKeys={['3', '4']} style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
             <Sidenav.Body>
               <Nav activeKey={activeKey}>
-                <Nav.Item eventKey="1" icon={<DashboardIcon />}>
+                <Nav.Item eventKey="1" icon={<DashboardIcon />} onClick={() => { navigate(``); setActiveKey('1') }}>
                   Dashboard
                 </Nav.Item>
-                <Nav.Item eventKey="2" icon={<GroupIcon />} onClick={() => {navigate(`teilnehmer`); setActiveKey('2')}} >
+                <Nav.Item eventKey="2" icon={<GroupIcon />} onClick={() => { navigate(`teilnehmer`); setActiveKey('2') }} >
                   Teilnehmer
                 </Nav.Item>
                 <Nav.Menu eventKey="3" title="Advanced" icon={<MagicIcon />}>
@@ -81,9 +84,10 @@ const VeranstaltungPage = () => {
           </Sidenav>
         </Sidebar>
         <Container>
-          
+
           <Content>
-            <Outlet />
+            <Outlet context={veranstaltung}
+            />
           </Content>
 
         </Container>

@@ -2,36 +2,27 @@ import { Table, Button } from 'rsuite';
 import { useCookies } from 'react-cookie'
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import moment from 'moment'
 
 const { Column, HeaderCell, Cell } = Table;
 
-const VeranstaltungenTable = () => {
-    const [ cookies, setCookie, removeCookie ] = useCookies(null);
-    const authToken = cookies.authToken
-    const userEmail = cookies.userEmail
-    const [veranstaltungen, setVeranstaltungen ] = useState(undefined);
-    console.log(userEmail)
+const VeranstaltungenTable = ({setSelectedVeranstaltung, setShowModal, veranstaltungen, setEditMode, getData}) => {
 
-    const getData = async () => {
+
+    const deleteVeranstaltung = async(v_id) => {
         try {
-            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/veranstaltungen/${userEmail}`)
-            const json = await response.json()
-            console.log(json)
-            setVeranstaltungen(json)
-            return json;
+            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/veranstaltung/${v_id}`, {
+                method: 'DELETE',
+            })
+            console.log(response)
+            if (response.status === 200) {
+                getData()
+            }
         } catch (err) {
             console.error(err)
         }
     }
-
-
-    useEffect(() => {
-        getData();
-    }, []);
-    console.log("veranstaltung: ", veranstaltungen)
-
-
- 
+    
     
     return (
         <Table
@@ -63,17 +54,46 @@ const VeranstaltungenTable = () => {
 
             <Column width={100}>
                 <HeaderCell>Veranstalter</HeaderCell>
-                <Cell dataKey="host" />
+                <Cell dataKey="user_name" />
             </Column>
 
-            <Column width={80} fixed="right">
-                <HeaderCell>...</HeaderCell>
+            <Column width={200}>
+                <HeaderCell>Adresse</HeaderCell>
+                <Cell dataKey="ort" />
+            </Column>
+
+            <Column width={80}>
+                <HeaderCell></HeaderCell>
 
                 <Cell style={{ padding: '6px' }}>
                     {rowData => (
-                        <Link appearance="link" to={`veranstaltung/${rowData.v_id}`}>
+                        <Button color="grey" appearance="primary" href={`veranstaltung/${rowData.v_id}`}>
+                            View Details
+                        </Button>
+                    )}
+                </Cell>
+            </Column>
+
+            <Column width={200}  align="right">
+                <HeaderCell></HeaderCell>
+
+                <Cell style={{ padding: '6px' }}>
+                    {rowData => (
+                        <Button color="blue" appearance="primary" onClick={() => {setEditMode(true); setSelectedVeranstaltung(rowData); setShowModal(true)}}>
                             Edit
-                        </Link>
+                        </Button>
+                    )}
+                </Cell>
+            </Column>
+
+            <Column width={200} align="right" >
+                <HeaderCell></HeaderCell>
+
+                <Cell style={{ padding: '6px' }}>
+                    {rowData => (
+                        <Button color="red" appearance="primary" onClick={() => {deleteVeranstaltung(rowData.v_id)}}>
+                            Delete
+                        </Button>
                     )}
                 </Cell>
             </Column>
