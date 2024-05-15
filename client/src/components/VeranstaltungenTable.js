@@ -1,8 +1,4 @@
 import { Table, Button } from 'rsuite';
-import { useCookies } from 'react-cookie'
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import moment from 'moment'
 
 const { Column, HeaderCell, Cell } = Table;
 
@@ -26,6 +22,7 @@ const VeranstaltungenTable = ({setSelectedVeranstaltung, setShowModal, veranstal
     
     return (
         <Table
+            wordWrap="break-word"
             height={400}
             data={veranstaltungen}
             onRowClick={rowData => {
@@ -37,24 +34,24 @@ const VeranstaltungenTable = ({setSelectedVeranstaltung, setShowModal, veranstal
                 <Cell dataKey="v_id" />
             </Column>
 
-            <Column width={150}>
+            <Column width={200}>
                 <HeaderCell>Veranstaltung</HeaderCell>
                 <Cell dataKey="v_name" />
             </Column>
 
-            <Column width={150}>
+            <Column width={200}>
                 <HeaderCell>Teilnehmer#</HeaderCell>
                 <Cell dataKey="teilnehmer_anzahl" />
             </Column>
 
-            <Column width={300}>
+            <Column width={200}>
                 <HeaderCell>Datum</HeaderCell>
                 <Cell dataKey="datum" />
             </Column>
 
-            <Column width={100}>
+            <Column width={200}>
                 <HeaderCell>Veranstalter</HeaderCell>
-                <Cell dataKey="user_name" />
+                <Cell dataKey="u_email" />
             </Column>
 
             <Column width={200}>
@@ -62,31 +59,31 @@ const VeranstaltungenTable = ({setSelectedVeranstaltung, setShowModal, veranstal
                 <Cell dataKey="ort" />
             </Column>
 
-            <Column width={80}>
+            <Column width={100} align="right">
                 <HeaderCell></HeaderCell>
 
                 <Cell style={{ padding: '6px' }}>
                     {rowData => (
-                        <Button color="grey" appearance="primary" href={`veranstaltung/${rowData.v_id}`}>
+                        <Button appearance="primary" href={`veranstaltung/${rowData.v_id}`}>
                             View Details
                         </Button>
                     )}
                 </Cell>
             </Column>
 
-            <Column width={200}  align="right">
+            <Column width={100}  align="right">
                 <HeaderCell></HeaderCell>
 
                 <Cell style={{ padding: '6px' }}>
                     {rowData => (
-                        <Button color="blue" appearance="primary" onClick={() => {setEditMode(true); setSelectedVeranstaltung(rowData); setShowModal(true)}}>
+                        <Button color="yellow" appearance="primary" onClick={() => {setEditMode(true); setSelectedVeranstaltung(rowData); setShowModal(true)}}>
                             Edit
                         </Button>
                     )}
                 </Cell>
             </Column>
 
-            <Column width={200} align="right" >
+            <Column width={100} align="right" >
                 <HeaderCell></HeaderCell>
 
                 <Cell style={{ padding: '6px' }}>

@@ -8,7 +8,6 @@ import VeranstaltungPage from './pages/VeranstaltungPage';
 import TeilnehmerTable from './components/TeilnehmerTable';
 import LogInPage from './pages/LogInPage';
 import ProtectedRoute from './components/ProtectedRoute';
-import VeranstaltungFrom from './components/VeranstaltungForm';
 import VeranstaltungDashboard from './components/VeranstaltungDashboard';
 import GuestPage from './pages/GuestPage';
 

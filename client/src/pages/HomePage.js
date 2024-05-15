@@ -15,8 +15,6 @@ export default function HomePage() {
   const [selectedVeranstaltung, setSelectedVeranstaltung] = useState(null)
   const [editMode, setEditMode] = useState(null)
 
-
-
   const getData = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_SERVERURL}/veranstaltungen/${userId}`)
@@ -28,7 +26,6 @@ export default function HomePage() {
       console.error(err)
     }
   }
-
 
   useEffect(() => {
     getData();

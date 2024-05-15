@@ -8,7 +8,7 @@ const Auth = () => {
     const [cookies, setCookie] = useCookies(null);
     const authToken = cookies.authToken
     const [isLogIn, setisLogIn] = useState(true);
-    const [email, setEmail] = useState(null);
+    const [u_email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
     const [confirmPassword, setConfirmPassword] = useState(null);
     const [error, setError] = useState(null);
@@ -33,7 +33,7 @@ const Auth = () => {
             return
         }
 
-        if (isLogIn && !email) {
+        if (isLogIn && !u_email) {
             setError('Email required!')
             return
         }
@@ -46,7 +46,7 @@ const Auth = () => {
         const response = await fetch(`${process.env.REACT_APP_SERVERURL}/${endpoint}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ u_email, password })
         })
 
         const data = await response.json()
@@ -54,7 +54,7 @@ const Auth = () => {
         if (data.detail) {
             setError(data.detail)
         } else {
-            setCookie('userEmail', data.email)
+            setCookie('userEmail', data.u_email)
             setCookie('authToken', data.token)
             setCookie('userId', data.userId)
         }
@@ -81,12 +81,12 @@ const Auth = () => {
                         >Login</Button>
                     </ButtonToolbar>
                 </Form.Group>
-                <Form.Group controlId="email">
+                <Form.Group controlId="u_email">
                     <Form.ControlLabel>Email</Form.ControlLabel>
                     <Form.Control
                         defaultValue={''}
-                        name='email'
-                        type="email"
+                        name='u_email'
+                        type="u_email"
                         placeholder='Email'
                         onChange={(value) => setEmail(value)}
                     ></Form.Control>

@@ -13,7 +13,7 @@ const NavBar = () => {
 
  return (
   <Navbar appearance='inverse'>
-    <Navbar.Brand div style={{ width: 260 }} href="#">PartyPlanner</Navbar.Brand>
+    <Navbar.Brand style={{ width: 260 }} href="#">PartyPlanner</Navbar.Brand>
     <Nav>
       <Nav.Item>Home</Nav.Item>
       <Nav.Item>News</Nav.Item>

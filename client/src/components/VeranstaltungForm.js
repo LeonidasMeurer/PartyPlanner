@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { DatePicker, Form, InputNumber, Button, ButtonToolbar } from 'rsuite'
 import { useCookies } from 'react-cookie';
 
 
-const VeranstaltungFrom = ({ setShowModal, veranstaltung, editMode, getData }) => {
+const VeranstaltungForm = ({ setShowModal, veranstaltung, editMode, getData }) => {
     const [cookies] = useCookies(null);
     const userEmail = cookies.userEmail
     const userId = cookies.userId
-    const datum = new Date(veranstaltung.datum)
+    const datum = new Date(veranstaltung?.datum)
 
     const [formValue, setFormValue] = useState({
         v_name: editMode ? veranstaltung.v_name : null,
         teilnehmer_anzahl: editMode ? veranstaltung.teilnehmer_anzahl : null,
         datum: editMode ? datum : null,
         beschreibung: editMode ? veranstaltung.beschreibung : null,
-        user_name: userEmail,
+        u_email: userEmail,
         ort: editMode ? veranstaltung.ort : null,
-        user_id: userId,
+        u_id: userId,
     })
 
 
@@ -130,4 +130,4 @@ const VeranstaltungFrom = ({ setShowModal, veranstaltung, editMode, getData }) =
     );
 };
 
-export default VeranstaltungFrom;
+export default VeranstaltungForm;

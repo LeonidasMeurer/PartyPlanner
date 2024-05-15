@@ -1,8 +1,11 @@
-import { Modal } from 'rsuite'
-import VeranstaltungForm from './VeranstaltungForm';
+import React, { useState } from 'react';
+import { DatePicker, Form, InputNumber, Modal, Button } from 'rsuite'
+import VeranstaltungFrom from './VeranstaltungForm';
+import GuestForm from './GuestForm';
 
 
-const VeranstaltungModal = ({ showModal, setShowModal, veranstaltung, editMode, userEmail, userId, getData }) => {
+
+const GuestModal = ({ showModal, setShowModal, v_id, createGuest }) => {
 
     return (
         <>
@@ -16,14 +19,11 @@ const VeranstaltungModal = ({ showModal, setShowModal, veranstaltung, editMode, 
                     <Modal.Title>Veranstaltung</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <VeranstaltungForm
+                    <GuestForm
                         showModal={showModal}
                         setShowModal={setShowModal}
-                        editMode={editMode}
-                        veranstaltung={veranstaltung}
-                        userEmail={userEmail}
-                        userId={userId}
-                        getData={getData}
+                        v_id={v_id}
+                        createGuest={createGuest}
                     />
                 </Modal.Body>
             </Modal>
@@ -31,4 +31,4 @@ const VeranstaltungModal = ({ showModal, setShowModal, veranstaltung, editMode, 
     );
 };
 
-export default VeranstaltungModal;
+export default GuestModal;
