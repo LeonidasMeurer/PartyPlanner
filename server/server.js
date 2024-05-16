@@ -73,6 +73,35 @@ app.post('/login', async (req, res) => {
 })
 
 
+//get user
+app.get("/user/:u_id", async (req, res) => {
+  const { u_id } = req.params
+  console.log(u_id)
+
+  try {
+    const user = await pool.query("SELECT * FROM users WHERE u_id = $1",
+      [u_id]);
+    res.json(user.rows);
+    console.log(user.rows)
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.put("/user/:u_id", async (req, res) => {
+  const { u_id } = req.params
+  const { u_email, u_ernaehrungsform } = req.body
+  try {
+    const editGuest = await pool.query(
+      "UPDATE users SET u_email = $1, u_ernaehrungsform = $2 WHERE u_id = $3 RETURNING *",
+      [u_email, u_ernaehrungsform, u_id]
+    );
+    res.json(editGuest);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // Veranstaltungen
 // create Veranstaltung
 app.post("/veranstaltung", async (req, res) => {

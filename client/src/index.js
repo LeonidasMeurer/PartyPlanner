@@ -5,11 +5,12 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import HomePage from './pages/HomePage';
 import VeranstaltungPage from './pages/VeranstaltungPage';
-import TeilnehmerTable from './components/TeilnehmerTable';
+import TeilnehmerTable from './components/Users/TeilnehmerTable';
 import LogInPage from './pages/LogInPage';
 import ProtectedRoute from './components/ProtectedRoute';
-import VeranstaltungDashboard from './components/VeranstaltungDashboard';
+import VeranstaltungDashboard from './components//Veranstaltung/VeranstaltungDashboard';
 import GuestPage from './pages/GuestPage';
+import UserPage from './pages/UserPage';
 
 
 const router = createBrowserRouter([
@@ -22,6 +23,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <HomePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/user/:u_id',
+    element: (
+      <ProtectedRoute>
+        <UserPage />
       </ProtectedRoute>
     ),
   },

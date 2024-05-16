@@ -1,9 +1,11 @@
 import { Navbar, Nav } from 'rsuite';
 import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
 
 const NavBar = () => {
   const [cookies, setCookie, removeCookie] = useCookies()
-
+  const u_id = cookies.userId
+  const navigate = useNavigate();
   const singOut = () => {
     removeCookie('userEmail')
     removeCookie('userId')
@@ -15,8 +17,8 @@ const NavBar = () => {
   <Navbar appearance='inverse'>
     <Navbar.Brand style={{ width: 260 }} href="#">PartyPlanner</Navbar.Brand>
     <Nav>
-      <Nav.Item>Home</Nav.Item>
-      <Nav.Item>News</Nav.Item>
+      <Nav.Item onClick={() => { navigate(`/`)}} >Home</Nav.Item>
+      <Nav.Item onClick={() => { navigate(`/user/${u_id}`)}} >User</Nav.Item>
       <Nav.Item>Products</Nav.Item>
       <Nav.Menu title="About">
         <Nav.Item>Company</Nav.Item>

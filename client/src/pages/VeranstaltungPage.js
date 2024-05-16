@@ -7,7 +7,7 @@ import DashboardIcon from '@rsuite/icons/legacy/Dashboard';
 import GroupIcon from '@rsuite/icons/legacy/Group';
 import MagicIcon from '@rsuite/icons/legacy/Magic';
 import GearCircleIcon from '@rsuite/icons/legacy/GearCircle';
-import VeranstaltungModal from "../components/VeranstaltungModal";
+import VeranstaltungModal from "../components/Veranstaltung/VeranstaltungModal";
 
 
 const VeranstaltungPage = () => {
@@ -47,7 +47,6 @@ const VeranstaltungPage = () => {
 
   return (
     <div>
-
       <NavBar />
       <Container>
         <Sidebar
@@ -84,12 +83,10 @@ const VeranstaltungPage = () => {
           </Sidenav>
         </Sidebar>
         <Container>
-
           <Content>
             <Outlet context={veranstaltung}
             />
           </Content>
-
         </Container>
       </Container>
     </div>

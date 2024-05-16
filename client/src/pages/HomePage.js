@@ -1,9 +1,10 @@
 import NavBar from "../components/NavBar";
-import VeranstaltungModal from "../components/VeranstaltungModal";
-import VeranstaltungenTable from '../components/VeranstaltungenTable'
+import VeranstaltungModal from "../components/Veranstaltung/VeranstaltungModal";
+import VeranstaltungenTable from '../components/Veranstaltung/VeranstaltungenTable'
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
-import { Button } from "rsuite";
+import { Button, Sidenav, Nav, Sidebar, Container, Content } from "rsuite";
+import List from '@rsuite/icons/legacy/List';
 
 export default function HomePage() {
   const [cookies, setCookie, removeCookie] = useCookies(null);
@@ -35,7 +36,25 @@ export default function HomePage() {
   return (
     <div style={{ justifyContent: 'center', alignItems: 'center' }}>
       <NavBar />
-      <h1>Meine Veranstaltungen</h1>
+      <Container>
+      <Sidebar
+        style={{ display: 'flex', flexDirection: 'column' }}
+        width={260}
+        collapsible
+      >
+        <Sidenav appearance='inverse' defaultOpenKeys={['3', '4']} style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+        <Sidenav.Body>
+          <Nav activeKey={1}>
+            <Nav.Item eventKey="1" icon={<List />}>
+              Meine Veranstaltungen
+            </Nav.Item>
+
+          </Nav>
+        </Sidenav.Body>
+        </Sidenav>
+      </Sidebar>
+      <Container>
+          <Content>
       <VeranstaltungenTable
         setSelectedVeranstaltung={setSelectedVeranstaltung}
         setShowModal={setShowModal}
@@ -43,6 +62,7 @@ export default function HomePage() {
         setEditMode={setEditMode}
         getData={getData}
       />
+
       {showModal &&
         <VeranstaltungModal
           showModal={showModal}
@@ -55,7 +75,9 @@ export default function HomePage() {
 
         />
       }
-      <Button appearance="primary" color="green" onClick={() => { setShowModal(true); setEditMode(false) }}>Create New</Button>
+      </Content>
+      </Container>
+      </Container>
     </div>
   );
 }

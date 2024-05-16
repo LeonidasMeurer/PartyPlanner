@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Navbar, Container, Panel, Text, Heading, PanelGroup, Button } from 'rsuite';
-import TeilnehmerTable from "../components/TeilnehmerTable";
-import GuestModal from "../components/GuestModal";
-import GaesteTable from "../components/GaesteTable";
+import TeilnehmerTable from "../components/Users/TeilnehmerTable";
+import GuestModal from "../components/Gaeste/GaesteModal";
+import GaesteTable from "../components/Gaeste/GaesteTable";
 
 const GuestPage = () => {
     const params = useParams()

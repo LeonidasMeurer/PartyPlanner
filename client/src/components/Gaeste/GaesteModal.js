@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DatePicker, Form, InputNumber, Modal, Button } from 'rsuite'
-import VeranstaltungFrom from './VeranstaltungForm';
-import GuestForm from './GuestForm';
+import VeranstaltungFrom from '../Veranstaltung/VeranstaltungForm';
+import GuestForm from './GaesteForm';
 
 
 
