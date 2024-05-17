@@ -5,9 +5,13 @@ import { useCookies } from "react-cookie";
 import { Nav, Sidenav, Container, Header, Content, Sidebar } from "rsuite";
 import DashboardIcon from '@rsuite/icons/legacy/Dashboard';
 import GroupIcon from '@rsuite/icons/legacy/Group';
-import MagicIcon from '@rsuite/icons/legacy/Magic';
-import GearCircleIcon from '@rsuite/icons/legacy/GearCircle';
-import VeranstaltungModal from "../components/Veranstaltung/VeranstaltungModal";
+import List from '@rsuite/icons/legacy/List';
+import CheckOutlineIcon from '@rsuite/icons/CheckOutline';
+import BarLineChartIcon from '@rsuite/icons/BarLineChart';
+import SentToUserIcon from '@rsuite/icons/SentToUser';
+
+
+
 
 
 const VeranstaltungPage = () => {
@@ -63,21 +67,18 @@ const VeranstaltungPage = () => {
                 <Nav.Item eventKey="2" icon={<GroupIcon />} onClick={() => { navigate(`teilnehmer`); setActiveKey('2') }} >
                   Teilnehmer
                 </Nav.Item>
-                <Nav.Menu eventKey="3" title="Advanced" icon={<MagicIcon />}>
-                  <Nav.Item eventKey="3-1">Geo</Nav.Item>
-                  <Nav.Item eventKey="3-2">Devices</Nav.Item>
-                  <Nav.Item eventKey="3-3">Loyalty</Nav.Item>
-                  <Nav.Item eventKey="3-4">Visit Depth</Nav.Item>
-                </Nav.Menu>
-                <Nav.Menu eventKey="4" title="Settings" icon={<GearCircleIcon />}>
-                  <Nav.Item eventKey="4-1">Applications</Nav.Item>
-                  <Nav.Item eventKey="4-2">Channels</Nav.Item>
-                  <Nav.Item eventKey="4-3">Versions</Nav.Item>
-                  <Nav.Menu eventKey="4-5" title="Custom Action" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                    <Nav.Item eventKey="4-5-1">Action Name</Nav.Item>
-                    <Nav.Item eventKey="4-5-2">Action Params</Nav.Item>
-                  </Nav.Menu>
-                </Nav.Menu>
+                <Nav.Item eventKey="3" icon={<List />} onClick={() => { navigate(`rezepte`); setActiveKey('3') }} >
+                  Essen
+                </Nav.Item>
+                <Nav.Item eventKey="4" icon={<CheckOutlineIcon />} onClick={() => { navigate(`aufgaben`); setActiveKey('4') }} >
+                  Aufgaben
+                </Nav.Item>
+                <Nav.Item eventKey="5" icon={<BarLineChartIcon />} onClick={() => { navigate(`statistik`); setActiveKey('5') }} >
+                  Statistik
+                </Nav.Item>
+                <Nav.Item eventKey="5" icon={<SentToUserIcon />} onClick={() => { navigate(`/guestpage/${params.v_id}`); setActiveKey('5') }} >
+                  Gäste Seite
+                </Nav.Item>
               </Nav>
             </Sidenav.Body>
           </Sidenav>

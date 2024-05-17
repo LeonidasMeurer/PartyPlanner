@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
-import { Outlet, useParams, Link, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import { Nav, Sidenav, Container, Header, Content, Sidebar } from "rsuite";
-import DashboardIcon from '@rsuite/icons/legacy/Dashboard';
+import { Nav, Sidenav, Container, Content, Sidebar } from "rsuite";
 import GroupIcon from '@rsuite/icons/legacy/Group';
-import MagicIcon from '@rsuite/icons/legacy/Magic';
-import GearCircleIcon from '@rsuite/icons/legacy/GearCircle';
-import VeranstaltungModal from "../components/Veranstaltung/VeranstaltungModal";
-import UserForm from "../components/Users/UserForm";
+import List from '@rsuite/icons/legacy/List';
+import RezeptModal from "../components/Rezepte/RezeptModal";
+
 
 
 const UserPage = () => {
@@ -16,6 +14,7 @@ const UserPage = () => {
   const userId = cookies.userId
   const [user, setUser] = useState(undefined);
   const navigate = useNavigate();
+  const [activeKey, setActiveKey] = useState('1');
 
   console.log(userId)
 
@@ -44,7 +43,7 @@ const UserPage = () => {
   }
 
   return (
-    <div>
+    <>
       <NavBar />
       <Container>
         <Sidebar
@@ -54,25 +53,30 @@ const UserPage = () => {
         >
           <Sidenav appearance='inverse' defaultOpenKeys={['3', '4']} style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
             <Sidenav.Body>
-              <Nav activeKey={1}>
-                <Nav.Item eventKey="1" icon={<GroupIcon />} onClick={() => { navigate(`teilnehmer`)}} >
+              <Nav activeKey={activeKey}>
+                <Nav.Item eventKey="1" icon={<GroupIcon />} onClick={() => { navigate(``); setActiveKey(1) }} >
                   Account
+                </Nav.Item>
+              </Nav>
+              <Nav activeKey={1}>
+                <Nav.Item eventKey="2" icon={<List />} onClick={() => { navigate(`rezepte`); setActiveKey(2) }} >
+                  Rezepte
                 </Nav.Item>
               </Nav>
             </Sidenav.Body>
           </Sidenav>
         </Sidebar>
         <Container>
-            <Content>
-                <UserForm
-                userId={userId}
-                getData={getData}
-                user={user}/>
-            </Content>
+          <Content>
+            <Outlet context={[userId, getData, user]} />
+          </Content>
         </Container>
+        
 
       </Container>
-    </div>
+
+
+    </>
 
   );
 }

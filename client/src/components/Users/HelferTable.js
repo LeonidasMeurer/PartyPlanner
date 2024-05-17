@@ -5,30 +5,33 @@ import { Link, useParams } from 'react-router-dom';
 
 const { Column, HeaderCell, Cell } = Table;
 
-const TeilnehmerTable = () => {
-    const [teilnehmer, setTeilnehmer] = useState(undefined);
+const HelferTable = ({ helfer, getHelfer }) => {
     const params = useParams();
 
-    const getData = async () => {
+
+    console.log('helfer', helfer)
+
+    const editHelfer = async (u_id, zusage) => {
+        if (zusage === 'keine Antwort' || zusage === 'Abgesagt') {
+            zusage = 'Zugesagt'
+        } else {
+            zusage = 'Abgesagt'
+        }
+
         try {
-            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/veranstaltung_teilnehmer/${params.v_id}`)
-            const json = await response.json()
-            console.log(json)
-            setTeilnehmer(json)
-            return json;
+            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/helfer/${params.v_id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ u_id, zusage })
+            })
+            console.log(response)
+            if (response.status === 200) {
+                getHelfer()
+            }
         } catch (err) {
             console.error(err)
         }
     }
-
-
-    useEffect(() => {
-        getData();
-    }, []);
-    console.log("veranstaltung: ", teilnehmer)
-
-
-
 
     return (
         <div style={{ paddingLeft: "10px" }}>
@@ -37,7 +40,7 @@ const TeilnehmerTable = () => {
             <Table
                 autoHeight
                 wordWrap="break-word"
-                data={teilnehmer}
+                data={helfer}
                 onRowClick={rowData => {
                     console.log(rowData);
                 }}
@@ -51,21 +54,20 @@ const TeilnehmerTable = () => {
                     <HeaderCell>Status</HeaderCell>
                     <Cell dataKey="zusage">
                         {rowData => (
-                            <Button 
-                            style={{width: 150}}
-                            appearance="primary"
-                            color={rowData.zusage === 'Zugesagt' ? 'green' : rowData.zusage === 'Abgesagt' ? 'red' : 'yellow'}
+                            <Button
+                                style={{ width: 150 }}
+                                appearance="primary"
+                                color={rowData.zusage === 'Zugesagt' ? 'green' : rowData.zusage === 'Abgesagt' ? 'red' : 'yellow'}
+                                onClick={() => editHelfer(rowData.u_id, rowData.zusage)}
                             >
                                 {rowData.zusage === 'Zugesagt' ? 'Zugesagt' : rowData.zusage === 'Abgesagt' ? 'Abgesagt' : 'keine Antwort'}
                             </Button>
                         )}
                     </Cell>
                 </Column>
-
-               
             </Table>
         </div>
     )
 };
 
-export default TeilnehmerTable;
+export default HelferTable;

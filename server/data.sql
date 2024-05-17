@@ -28,7 +28,7 @@ CREATE TABLE gaeste (
 CREATE TABLE rezepte (
     r_id BIGSERIAL PRIMARY KEY,
     r_name VARCHAR(255) NOT NULL,
-    r_ernaerungsform JSON,
+    r_ernaehrungsform JSON,
     u_id INTEGER REFERENCES users(u_id) ON DELETE CASCADE
 )
 

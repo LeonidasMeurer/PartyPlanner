@@ -3,7 +3,7 @@ import VeranstaltungModal from "../components/Veranstaltung/VeranstaltungModal";
 import VeranstaltungenTable from '../components/Veranstaltung/VeranstaltungenTable'
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
-import { Button, Sidenav, Nav, Sidebar, Container, Content } from "rsuite";
+import { Sidenav, Nav, Sidebar, Container, Content } from "rsuite";
 import List from '@rsuite/icons/legacy/List';
 
 export default function HomePage() {
@@ -37,46 +37,47 @@ export default function HomePage() {
     <div style={{ justifyContent: 'center', alignItems: 'center' }}>
       <NavBar />
       <Container>
-      <Sidebar
-        style={{ display: 'flex', flexDirection: 'column' }}
-        width={260}
-        collapsible
-      >
-        <Sidenav appearance='inverse' defaultOpenKeys={['3', '4']} style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-        <Sidenav.Body>
-          <Nav activeKey={1}>
-            <Nav.Item eventKey="1" icon={<List />}>
-              Meine Veranstaltungen
-            </Nav.Item>
+        <Sidebar
+          style={{ display: 'flex', flexDirection: 'column' }}
+          width={260}
+          collapsible
+        >
+          <Sidenav appearance='inverse' defaultOpenKeys={['3', '4']} style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+            <Sidenav.Body>
+              <Nav activeKey={1}>
+                <Nav.Item eventKey="1" icon={<List />}>
+                  Meine Veranstaltungen
+                </Nav.Item>
 
-          </Nav>
-        </Sidenav.Body>
-        </Sidenav>
-      </Sidebar>
-      <Container>
+              </Nav>
+            </Sidenav.Body>
+          </Sidenav>
+        </Sidebar>
+        <Container>
           <Content>
-      <VeranstaltungenTable
-        setSelectedVeranstaltung={setSelectedVeranstaltung}
-        setShowModal={setShowModal}
-        veranstaltungen={veranstaltungen}
-        setEditMode={setEditMode}
-        getData={getData}
-      />
+            <VeranstaltungenTable
+              setSelectedVeranstaltung={setSelectedVeranstaltung}
+              setShowModal={setShowModal}
+              veranstaltungen={veranstaltungen}
+              setEditMode={setEditMode}
+              getData={getData}
+            />
 
-      {showModal &&
-        <VeranstaltungModal
-          showModal={showModal}
-          setShowModal={setShowModal}
-          editMode={editMode}
-          veranstaltung={selectedVeranstaltung}
-          userEmail={userEmail}
-          userId={userId}
-          getData={getData}
+            {showModal &&
+              <VeranstaltungModal
+                showModal={showModal}
+                setShowModal={setShowModal}
+                editMode={editMode}
+                veranstaltung={selectedVeranstaltung}
+                userEmail={userEmail}
+                userId={userId}
+                getData={getData}
 
-        />
-      }
-      </Content>
-      </Container>
+              />
+            }
+
+          </Content>
+        </Container>
       </Container>
     </div>
   );

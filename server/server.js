@@ -113,8 +113,8 @@ app.post("/veranstaltung", async (req, res) => {
       [v_name, teilnehmer_anzahl, datum, beschreibung, u_email, ort, u_id]
     );
     const veranstaltung_user = await pool.query(
-      "INSERT INTO veranstaltung_users (v_id, u_id) VALUES ($1, $2)",
-      [newVeranstaltung.rows[0].v_id, u_id]
+      "INSERT INTO veranstaltung_users (v_id, u_id, zusage) VALUES ($1, $2, $3)",
+      [newVeranstaltung.rows[0].v_id, u_id, 'Zugesagt']
     )
 
     res.json(newVeranstaltung.rows[0]);
@@ -187,15 +187,50 @@ app.get("/veranstaltung/:v_id", async (req, res) => {
 });
 
 //get users einer veranstaltungen
-app.get("/veranstaltung_teilnehmer/:v_id", async (req, res) => {
+app.get("/veranstaltung_helfer/:v_id", async (req, res) => {
   const { v_id } = req.params
   console.log(v_id)
 
   try {
-    const teilnehmer = await pool.query("SELECT u_email FROM users WHERE u_id IN (SELECT u_id FROM veranstaltung_users WHERE v_id = $1)",
+    const teilnehmer = await pool.query("SELECT * FROM users JOIN veranstaltung_users ON users.u_id = veranstaltung_users.u_id WHERE veranstaltung_users.v_id = $1",
       [v_id]);
     res.json(teilnehmer.rows);
     console.log(teilnehmer.rows)
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// add Helfer
+app.post("/veranstaltung_helfer/:v_id", async (req, res) => {
+  try {
+    const { u_email, zusage } = req.body;
+    const { v_id } = req.params
+    const user = await pool.query("SELECT u_id FROM users WHERE u_email = $1", [
+      u_email
+    ]);
+    console.log(user.rows[0].u_id)
+    const newVeranstaltung = await pool.query(
+      "INSERT INTO veranstaltung_users(u_id, v_id, zusage) VALUES($1, $2, $3) RETURNING *",
+      [user.rows[0].u_id, v_id, zusage]
+    );
+
+    res.json(newVeranstaltung.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// Edit Helfer
+app.put("/helfer/:v_id", async (req, res) => {
+  try {
+    const { zusage, u_id } = req.body
+    const { v_id } = req.params
+    const editGuest = await pool.query(
+      "UPDATE veranstaltung_users SET zusage = $1 WHERE u_id = $2 AND v_id = $3 RETURNING *",
+      [zusage, u_id, v_id]
+    );
+    res.json(editGuest);
   } catch (err) {
     console.error(err.message);
   }
@@ -219,7 +254,8 @@ app.post("/guest", async (req, res) => {
 
 app.put("/gast/:g_id", async (req, res) => {
   try {
-    const { g_id, zusage } = req.body
+    const { zusage } = req.body
+    const { g_id } = req.params
     const editGuest = await pool.query(
       "UPDATE gaeste SET zusage = $1 WHERE g_id = $2 RETURNING *",
       [zusage, g_id]
@@ -247,33 +283,132 @@ app.get("/veranstaltung_gaeste/:v_id", async (req, res) => {
 });
 
 
-//update a todo
-app.put("/todos/:id", async (req, res) => {
+//get a rezepte
+app.get("/rezepte_user/:u_id", async (req, res) => {
   try {
-    const { id } = req.params;
-    const { description } = req.body;
-    const updateTodo = await pool.query(
-      "UPDATE todo SET description = $1 WHERE todo_id = $2",
-      [description, id]
-    );
-
-    res.json("Todo was updated!");
+    const { u_id } = req.params;
+    console.log(u_id)
+    const rezepte = await pool.query("SELECT * FROM rezepte WHERE u_id = $1 ORDER BY r_id", [
+      u_id
+    ]);
+    console.log(rezepte.rows)
+    res.json(rezepte.rows);
   } catch (err) {
     console.error(err.message);
   }
 });
 
-//delete a todo
-
-app.delete("/todos/:id", async (req, res) => {
+//get a rezepte
+app.get("/rezepte_veranstaltung/:v_id", async (req, res) => {
   try {
-    const { id } = req.params;
-    const deleteTodo = await pool.query("DELETE FROM todo WHERE todo_id = $1", [
-      id
+    const { v_id } = req.params;
+    console.log(v_id)
+    const rezepte = await pool.query(`(
+      SELECT * FROM rezepte 
+        JOIN rezept_veranstaltung
+        ON rezepte.r_id = rezept_veranstaltung.r_id
+      WHERE rezepte.r_id IN 
+      (SELECT r_id FROM rezept_veranstaltung WHERE v_id = $1))
+      ORDER BY rezepte.r_id`, [
+      v_id
     ]);
-    res.json("Todo was deleted!");
+    console.log(rezepte.rows)
+    res.json(rezepte.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+
+// delete Veranstaltung
+app.delete("/rezepte_veranstaltung/:r_id", async (req, res) => {
+  try {
+    const { r_id } = req.params;
+    const { v_id} = req.body;
+    const deleteRezept = await pool.query("DELETE FROM rezept_veranstaltung WHERE r_id = $1 AND v_id = $2", [
+      r_id, v_id
+    ]);
+    res.json("Rezept was deleted!");
   } catch (err) {
     console.log(err.message);
+  }
+});
+
+
+app.put("/rezepte_veranstaltung/:r_id", async (req, res) => {
+  const { r_id } = req.params
+  const { new_r_id, portionen, v_id } = req.body
+  try {
+    const editRezept = await pool.query(
+      "UPDATE rezept_veranstaltung SET portionen = $1, r_id = $2 WHERE r_id = $3 AND v_id = $4 RETURNING *",
+      [portionen, new_r_id, r_id, v_id]
+    );
+    res.json(editRezept);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+
+// add Rezept
+app.post("/rezepte", async (req, res) => {
+  try {
+    const { r_name, r_ernaehrungsform, salzig, u_id } = req.body;
+
+    const newVeranstaltung = await pool.query(
+      "INSERT INTO rezepte ( r_name, r_ernaehrungsform, salzig, u_id )VALUES($1, $2, $3, $4) RETURNING *",
+      [ r_name, r_ernaehrungsform, salzig, u_id ]
+    );
+
+    res.json(newVeranstaltung.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.put("/rezepte/:r_id", async (req, res) => {
+  const { r_id } = req.params
+  const { r_name, r_ernaehrungsform, salzig } = req.body
+  try {
+    const editRezept = await pool.query(
+      "UPDATE rezepte SET r_name = $1, r_ernaehrungsform = $2, salzig = $3 WHERE r_id = $4 RETURNING *",
+      [r_name, r_ernaehrungsform, salzig, r_id]
+    );
+    res.json(editRezept);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// delete Veranstaltung
+app.delete("/rezepte/:r_id", async (req, res) => {
+  try {
+    const { r_id } = req.params;
+    const deleteRezept = await pool.query("DELETE FROM rezepte WHERE r_id = $1", [
+      r_id
+    ]);
+    res.json("Rezept was deleted!");
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
+
+// add Rezept to Veranstaltung
+app.post("/rezept_to_veranstaltung/:v_id", async (req, res) => {
+  try {
+    const { v_id } = req.params;
+    const { r_id, portionen } = req.body;
+    console.log(v_id, r_id, portionen)
+
+    const rezepteVeranstaltung = await pool.query(
+      "INSERT INTO rezept_veranstaltung ( v_id, r_id, portionen )VALUES($1, $2, $3) RETURNING *",
+      [ v_id, r_id, portionen ]
+    );
+
+    res.json(rezepteVeranstaltung.rows[0]);
+  } catch (err) {
+    console.error(err.message);
   }
 });
 

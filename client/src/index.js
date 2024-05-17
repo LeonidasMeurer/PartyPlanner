@@ -5,12 +5,15 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import HomePage from './pages/HomePage';
 import VeranstaltungPage from './pages/VeranstaltungPage';
-import TeilnehmerTable from './components/Users/TeilnehmerTable';
 import LogInPage from './pages/LogInPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import VeranstaltungDashboard from './components//Veranstaltung/VeranstaltungDashboard';
 import GuestPage from './pages/GuestPage';
 import UserPage from './pages/UserPage';
+import UserForm from './components/Users/UserForm';
+import RezepteTable from './components/Rezepte/RezepteTable';
+import VeranstaltungRezepte from './components/Veranstaltung/VeranstaltungRezepte';
+import VeranstaltungTeilnehmerTable from './components/Veranstaltung/VeranstaltungTeilnehmerTable';
 
 
 const router = createBrowserRouter([
@@ -33,6 +36,17 @@ const router = createBrowserRouter([
         <UserPage />
       </ProtectedRoute>
     ),
+    children: [
+      {
+        path: '/user/:u_id',
+        element: 
+        <ProtectedRoute><UserForm /></ProtectedRoute>
+      },
+      {
+        path: '/user/:u_id/rezepte',
+        element: <RezepteTable />
+      },
+    ]
   },
   {
     path: '/GuestPage/:v_id',
@@ -55,7 +69,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/veranstaltung/:v_id/teilnehmer',
-        element: <TeilnehmerTable />
+        element: <VeranstaltungTeilnehmerTable />
+      },
+      {
+        path: '/veranstaltung/:v_id/rezepte',
+        element: <VeranstaltungRezepte />
       },
     ]
   },

@@ -1,6 +1,11 @@
 import { useState } from 'react';
-import { useOutletContext } from 'react-router-dom';
-import { Button, ButtonToolbar,  Checkbox, Input, Panel, Form } from 'rsuite'
+import { useParams } from 'react-router-dom';
+import { Button, ButtonToolbar, SelectPicker, CheckboxGroup, Checkbox, Input, Panel, Form } from 'rsuite'
+
+const rezeptTyp = [
+    'salzig',
+    'süß',
+].map(item => ({ label: item, value: item }));
 
 const ernaehrungsform_default = {
     Omnivore: false,
@@ -13,25 +18,25 @@ const ernaehrungsform_default = {
 }
 
 
-const UserForm = () => {
-    const [userId, getData, user] = useOutletContext()
-    console.log('user', user)
-    const [u_ernaehrungsform, setErnaerungsform] = useState(user.u_ernaehrungsform ? user.u_ernaehrungsform : ernaehrungsform_default)
-    const [u_email, setEmail] = useState(user.u_email ? user.u_email : '')
+const RezeptForm = ({ setShowModal, createRezept, selectedRezept, editMode, getData }) => {
+    const [r_ernaehrungsform, setErnaerungsform] = useState(editMode ? selectedRezept.r_ernaehrungsform : ernaehrungsform_default)
+    const [r_name, setName] = useState(editMode ? selectedRezept.r_name : '')
+    const [salzig, setSalzig] = useState(editMode ? selectedRezept.salzig : 'salzig')
+
 
     const changeErnaerungsform = (value) => {
         setErnaerungsform({
-            ...u_ernaehrungsform,
-            [value]: u_ernaehrungsform[value] === true ? false : true
+            ...r_ernaehrungsform,
+            [value]: r_ernaehrungsform[value] === true ? false : true
         })
     }
 
-    const editUser = async () => {
+    const editRezept = async () => {
         try {
-            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/user/${userId}`, {
+            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/rezepte/${selectedRezept.r_id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ u_email, u_ernaehrungsform })
+                body: JSON.stringify({ r_name, r_ernaehrungsform, salzig })
             })
             console.log(response)
             if (response.status === 200) {
@@ -42,15 +47,35 @@ const UserForm = () => {
         }
     }
 
+    const onSubmit = () => {
+        if (!editMode) {
+            createRezept(r_name, r_ernaehrungsform, salzig)
+        } else {
+            editRezept()
+        }
+        setShowModal(false)
+    }
+
     return (
         <Panel>
             <Form>
 
                 <Form.Group>
-                    <Form.ControlLabel>Email:</Form.ControlLabel>
+                    <Form.ControlLabel>Name:</Form.ControlLabel>
                     <Input
-                        value={u_email}
-                        onChange={(e) => setEmail(e)} />
+                        value={r_name}
+                        onChange={(e) => setName(e)} />
+                </Form.Group>
+
+                <Form.Group>
+                    <Form.ControlLabel>Typ</Form.ControlLabel>
+                <SelectPicker
+                    data={rezeptTyp}
+                    defaultValue={salzig}
+                    searchable={false}
+                    style={{ width: 300 }}
+                    onChange={(e) => { setSalzig(e) }}
+                />
                 </Form.Group>
 
                 <Form.Group >
@@ -59,53 +84,56 @@ const UserForm = () => {
                         display: 'flex',
                         flexDirection: 'column'
                     }}>
+
                         <Checkbox
-                            defaultChecked={user?.u_ernaehrungsform?.Omnivore}
+                            defaultChecked={r_ernaehrungsform?.Omnivore}
                             value={"Omnivore"}
                             onChange={(value) => changeErnaerungsform(value)}
                         >Ominvore</Checkbox>
                         <Checkbox
-                            defaultChecked={user?.u_ernaehrungsform?.Vegetarisch}
+                            defaultChecked={r_ernaehrungsform?.Vegetarisch}
                             value={"Vegetarisch"}
                             onChange={(value) => changeErnaerungsform(value)}
                         >Vegetarisch</Checkbox>
                         <Checkbox
-                            defaultChecked={user?.u_ernaehrungsform?.Vegan}
+                            defaultChecked={r_ernaehrungsform?.Vegan}
                             value={"Vegan"}
                             onChange={(value) => changeErnaerungsform(value)}
                         >Vegan</Checkbox>
                         <Checkbox
-                            defaultChecked={user?.u_ernaehrungsform?.kein_Alkohol}
+                            defaultChecked={r_ernaehrungsform?.kein_Alkohol}
                             value={"kein_Alkohol"}
                             onChange={(value) => changeErnaerungsform(value)}
                         >kein_Alkohol</Checkbox>
                         <Checkbox
-                            defaultChecked={user?.u_ernaehrungsform?.kein_Schweinefleisch}
+                            defaultChecked={r_ernaehrungsform?.kein_Schweinefleisch}
                             value={"kein_Schweinefleisch"}
                             onChange={(value) => changeErnaerungsform(value)}
                         >kein_Schweinefleisch</Checkbox>
                         <Checkbox
-                            defaultChecked={user?.u_ernaehrungsform?.Lactoseintolerant}
+                            defaultChecked={r_ernaehrungsform?.Lactoseintolerant}
                             value={"Lactoseintolerant"}
                             onChange={(value) => changeErnaerungsform(value)}
                         >Lactoseintolerant</Checkbox>
                         <Checkbox
-                            defaultChecked={user?.u_ernaehrungsform?.Glutenunverträglich}
+                            defaultChecked={r_ernaehrungsform?.Glutenunverträglich}
                             value={"Glutenunverträglich"}
                             onChange={(value) => changeErnaerungsform(value)}
                         >Glutenunverträglich</Checkbox>
                     </div>
                 </Form.Group>
-
                 <ButtonToolbar style={{ marginTop: '10px' }}>
-                    <Button onClick={() => { editUser(u_email, u_ernaehrungsform) }} appearance="primary">
-                        Save
+                    <Button onClick={() => { onSubmit() }} appearance="primary">
+                        Submit
                     </Button>
-
+                    <Button onClick={() => setShowModal(false)} appearance="subtle">
+                        Cancel
+                    </Button>
                 </ButtonToolbar>
             </Form>
         </Panel>
+
     );
 };
 
-export default UserForm;
+export default RezeptForm;

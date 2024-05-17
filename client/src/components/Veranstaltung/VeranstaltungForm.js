@@ -1,7 +1,9 @@
-import { useState } from 'react';
-import { DatePicker, Form, InputNumber, Button, ButtonToolbar } from 'rsuite'
+import { useState, forwardRef } from 'react';
+import { DatePicker, Form, InputNumber, Button, ButtonToolbar, Input } from 'rsuite'
 import { useCookies } from 'react-cookie';
 
+
+const Textarea = forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
 const VeranstaltungForm = ({ setShowModal, veranstaltung, editMode, getData }) => {
     const [cookies] = useCookies(null);
@@ -106,6 +108,8 @@ const VeranstaltungForm = ({ setShowModal, veranstaltung, editMode, getData }) =
                 <Form.Group controlId="beschreibung">
                     <Form.ControlLabel>Beschreibung</Form.ControlLabel>
                     <Form.Control
+                        rows={5}
+                        accepter={Textarea}
                         defaultValue={''}
                         name="beschreibung"
                     />

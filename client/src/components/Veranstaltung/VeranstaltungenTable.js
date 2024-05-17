@@ -27,37 +27,37 @@ const VeranstaltungenTable = ({setSelectedVeranstaltung, setShowModal, veranstal
             autoHeight
             data={veranstaltungen}
         >
-            <Column width={60} align="left">
+            <Column flexGrow={60} align="left">
                 <HeaderCell>Id</HeaderCell>
                 <Cell dataKey="v_id" />
             </Column>
 
-            <Column flexGrow align="left">
+            <Column flexGrow={200} align="left">
                 <HeaderCell>Veranstaltung</HeaderCell>
                 <Cell dataKey="v_name" />
             </Column>
 
-            <Column  width={100} align="left">
+            <Column  flexGrow={100} align="left">
                 <HeaderCell>Teilnehmer#</HeaderCell>
                 <Cell dataKey="teilnehmer_anzahl" />
             </Column>
 
-            <Column flexGrow align="left">
+            <Column flexGrow={200} align="left">
                 <HeaderCell>Datum</HeaderCell>
                 <Cell dataKey="datum" />
             </Column>
 
-            <Column flexGrow align="left">
+            <Column flexGrow={150} align="left">
                 <HeaderCell>Veranstalter</HeaderCell>
                 <Cell dataKey="u_email" />
             </Column>
 
-            <Column flexGrow align="left">
+            <Column flexGrow={150} align="left">
                 <HeaderCell>Adresse</HeaderCell>
                 <Cell dataKey="ort" />
             </Column>
 
-            <Column width={150} align="right" fixed>
+            <Column flexGrow={150} align="right" fixed>
                 <HeaderCell></HeaderCell>
 
                 <Cell style={{ padding: '6px' }}>
@@ -69,7 +69,7 @@ const VeranstaltungenTable = ({setSelectedVeranstaltung, setShowModal, veranstal
                 </Cell>
             </Column>
 
-            <Column width={100} align="right" fixed>
+            <Column flexGrow={100} align="right" fixed>
                 <HeaderCell></HeaderCell>
 
                 <Cell style={{ padding: '6px' }}>
@@ -81,7 +81,7 @@ const VeranstaltungenTable = ({setSelectedVeranstaltung, setShowModal, veranstal
                 </Cell>
             </Column>
 
-            <Column width={100} align="right" fixed >
+            <Column flexGrow={100} align="right" fixed >
                 <HeaderCell></HeaderCell>
 
                 <Cell style={{ padding: '6px' }}>
