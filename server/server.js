@@ -303,14 +303,14 @@ app.get("/rezepte_veranstaltung/:v_id", async (req, res) => {
   try {
     const { v_id } = req.params;
     console.log(v_id)
-    const rezepte = await pool.query(`(
+    const rezepte = await pool.query(`
       SELECT * FROM rezepte 
         JOIN rezept_veranstaltung
         ON rezepte.r_id = rezept_veranstaltung.r_id
         JOIN users
         ON rezepte.u_id = users.u_id
-      WHERE rezepte.r_id IN 
-      (SELECT r_id FROM rezept_veranstaltung WHERE v_id = $1))
+      WHERE v_id = $1 AND rezepte.r_id IN 
+      (SELECT r_id FROM rezept_veranstaltung WHERE v_id = $1)
       ORDER BY rezepte.r_id`, [
       v_id
     ]);
