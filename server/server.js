@@ -192,7 +192,7 @@ app.get("/veranstaltung_helfer/:v_id", async (req, res) => {
   console.log(v_id)
 
   try {
-    const teilnehmer = await pool.query("SELECT * FROM users JOIN veranstaltung_users ON users.u_id = veranstaltung_users.u_id WHERE veranstaltung_users.v_id = $1",
+    const teilnehmer = await pool.query("SELECT * FROM users JOIN veranstaltung_users ON users.u_id = veranstaltung_users.u_id WHERE veranstaltung_users.v_id = $1 ORDER BY users.u_id",
       [v_id]);
     res.json(teilnehmer.rows);
     console.log(teilnehmer.rows)
@@ -307,6 +307,8 @@ app.get("/rezepte_veranstaltung/:v_id", async (req, res) => {
       SELECT * FROM rezepte 
         JOIN rezept_veranstaltung
         ON rezepte.r_id = rezept_veranstaltung.r_id
+        JOIN users
+        ON rezepte.u_id = users.u_id
       WHERE rezepte.r_id IN 
       (SELECT r_id FROM rezept_veranstaltung WHERE v_id = $1))
       ORDER BY rezepte.r_id`, [
@@ -411,6 +413,53 @@ app.post("/rezept_to_veranstaltung/:v_id", async (req, res) => {
     console.error(err.message);
   }
 });
+
+
+
+//get aufgaben
+app.get("/aufgaben/:v_id", async (req, res) => {
+  try {
+    const { v_id } = req.params;
+    const aufgaben = await pool.query("SELECT * FROM aufgabe JOIN users ON users.u_id = aufgabe.u_id WHERE v_id = $1 ORDER BY a_id", [
+      v_id
+    ]);
+    console.log(aufgaben.rows)
+    res.json(aufgaben.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+
+// add Aufgabe
+app.post("/aufgabe", async (req, res) => {
+  try {
+    const { a_name, a_beschreibung, v_id, u_id } = req.body;
+    console.log( a_name, a_beschreibung, v_id, u_id )
+    const aufgabe = await pool.query(
+      "INSERT INTO aufgabe (a_name, a_beschreibung, v_id, u_id)VALUES($1, $2, $3, $4) RETURNING *",
+      [a_name, a_beschreibung, v_id, u_id]
+    );
+
+    res.json(aufgabe.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// delete Veranstaltung
+app.delete("/aufgabe/:a_id", async (req, res) => {
+  try {
+    const { a_id } = req.params;
+    const deleteRezept = await pool.query("DELETE FROM aufgabe WHERE a_id = $1", [
+      a_id
+    ]);
+    res.json("Aufgabe was deleted!");
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
 
 app.listen(5000, () => {
   console.log("server has started on port 5000");

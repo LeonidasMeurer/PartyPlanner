@@ -2,14 +2,45 @@ import { Table, Button } from 'rsuite';
 import { useCookies } from 'react-cookie'
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import HelferModal from './HelferModal';
 
 const { Column, HeaderCell, Cell } = Table;
 
-const HelferTable = ({ helfer, getHelfer }) => {
+const HelferTable = ({helfer, getHelfer}) => {
     const params = useParams();
+/*     const [helfer, setHelfer] = useState(undefined); */
+    const [showHelferModal, setShowHelferModal] = useState(false)
 
 
-    console.log('helfer', helfer)
+    
+    /* const getHelfer = async () => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/veranstaltung_helfer/${params.v_id}`)
+            const json = await response.json()
+            console.log('setHelfer', json)
+            setHelfer(json)
+            return json;
+        } catch (err) {
+            console.error(err)
+        }
+    } */
+
+    const createHelfer = async (u_email, zusage) => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/veranstaltung_helfer/${params.v_id}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ u_email, zusage})
+            })
+            console.log('createHelfer', response.rows)
+            if (response.status === 200) {
+                setShowHelferModal(false)
+                getHelfer()
+            }
+        } catch (err) {
+            console.error(err)
+        }
+    }
 
     const editHelfer = async (u_id, zusage) => {
         if (zusage === 'keine Antwort' || zusage === 'Abgesagt') {
@@ -33,10 +64,12 @@ const HelferTable = ({ helfer, getHelfer }) => {
         }
     }
 
+    useEffect(() => {
+        getHelfer();
+    }, []);
+
     return (
         <div style={{ paddingLeft: "10px" }}>
-
-
             <Table
                 autoHeight
                 wordWrap="break-word"
@@ -66,6 +99,14 @@ const HelferTable = ({ helfer, getHelfer }) => {
                     </Cell>
                 </Column>
             </Table>
+            {showHelferModal &&
+                <HelferModal
+                    showHelferModal={showHelferModal}
+                    setShowHelferModal={setShowHelferModal}
+                    createHelfer={createHelfer}
+                    helfer={helfer}
+                />
+            }
         </div>
     )
 };

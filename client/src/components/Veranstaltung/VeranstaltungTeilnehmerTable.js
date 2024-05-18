@@ -69,6 +69,22 @@ const VeranstaltungTeilnehmerTable = () => {
         }
     }
 
+    const createHelfer = async (u_email, zusage) => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/veranstaltung_helfer/${v_id}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ u_email, zusage})
+            })
+            if (response.status === 200) {
+                setShowHelferModal(false)
+                getHelfer()
+            }
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
     const editGuest = async (g_id, zusage) => {
         if (zusage === 'keine Antwort' || zusage === 'Abgesagt') {
             zusage = 'Zugesagt'
@@ -142,7 +158,7 @@ const VeranstaltungTeilnehmerTable = () => {
                     setShowHelferModal={setShowHelferModal}
                     v_id={v_id}
                     getHelfer={getHelfer}
-                    createGuest={createGuest}
+                    createHelfer={createHelfer}
                     helfer={helfer}
                 />
             }

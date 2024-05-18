@@ -4,6 +4,8 @@ import { Navbar, Container, Panel, Text, Heading, PanelGroup, Button, Nav } from
 import TeilnehmerTable from "../components/Users/HelferTable";
 import GuestModal from "../components/Gaeste/GaesteModal";
 import GaesteTable from "../components/Gaeste/GaesteTable";
+import HelferTable from "../components/Users/HelferTable";
+import { useCookies } from "react-cookie";
 
 const GuestPage = () => {
     const params = useParams()
@@ -12,6 +14,10 @@ const GuestPage = () => {
     const [veranstaltung, setVeranstaltung] = useState(undefined);
     const [gaeste, setGaeste] = useState(undefined);
     const [showModal, setShowModal] = useState(false)
+    const [helfer, setHelfer] = useState(undefined);
+    const [cookies, setCookie, removeCookie] = useCookies();
+    const authToken = cookies.authToken
+    const u_email = cookies.userEmail
 
 
     const getData = async () => {
@@ -31,6 +37,18 @@ const GuestPage = () => {
             const response = await fetch(`${process.env.REACT_APP_SERVERURL}/veranstaltung_gaeste/${params.v_id}`)
             const json = await response.json()
             setGaeste(json)
+            return json;
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    const getHelfer = async () => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/veranstaltung_helfer/${params.v_id}`)
+            const json = await response.json()
+            console.log('setHelfer', json)
+            setHelfer(json)
             return json;
         } catch (err) {
             console.error(err)
@@ -75,6 +93,21 @@ const GuestPage = () => {
         }
     }
 
+    const createHelfer = async () => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/veranstaltung_helfer/${v_id}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ u_email, zusage: 'Zugesagt' })
+            })
+            if (response.status === 200) {
+                getHelfer()
+            }
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
     useEffect(() => {
         getData();
         getGaeste()
@@ -108,7 +141,11 @@ const GuestPage = () => {
                     <Text as='pre' weight="regular">{`${veranstaltung.beschreibung}`} </Text>
                 </Panel>
                 <Panel header='Helfer Liste' defaultExpanded>
-                    <TeilnehmerTable />
+                    <HelferTable
+                        helfer={helfer}
+                        getHelfer={getHelfer}
+                    />
+                    <Button appearance="primary" color="green" onClick={() => { authToken ? createHelfer() : navigate('/') }}>Join as Helfer</Button>
                 </Panel>
                 <Panel header='Gäste Liste' defaultExpanded>
                     <GaesteTable

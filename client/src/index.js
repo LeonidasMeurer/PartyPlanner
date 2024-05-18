@@ -12,8 +12,9 @@ import GuestPage from './pages/GuestPage';
 import UserPage from './pages/UserPage';
 import UserForm from './components/Users/UserForm';
 import RezepteTable from './components/Rezepte/RezepteTable';
-import VeranstaltungRezepte from './components/Veranstaltung/VeranstaltungRezepte';
+import VeranstaltungRezepteTable from './components/Veranstaltung/VeranstaltungRezepteTable';
 import VeranstaltungTeilnehmerTable from './components/Veranstaltung/VeranstaltungTeilnehmerTable';
+import VeranstaltungAufgabenTable from './components/Veranstaltung/VeranstaltungAufgabenTable';
 
 
 const router = createBrowserRouter([
@@ -73,7 +74,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/veranstaltung/:v_id/rezepte',
-        element: <VeranstaltungRezepte />
+        element: <VeranstaltungRezepteTable />
+      },
+      {
+        path: '/veranstaltung/:v_id/aufgaben',
+        element: <VeranstaltungAufgabenTable />
       },
     ]
   },

@@ -5,7 +5,7 @@ import HelferForm from './HelferForm';
 
 
 
-const HelferModal = ({ showHelferModal, setShowHelferModal, v_id, getHelfer }) => {
+const HelferModal = ({ showHelferModal, setShowHelferModal, createHelfer }) => {
 
     return (
         <>
@@ -22,8 +22,7 @@ const HelferModal = ({ showHelferModal, setShowHelferModal, v_id, getHelfer }) =
                     <HelferForm
                         showModal={showHelferModal}
                         setShowHelferModal={setShowHelferModal}
-                        v_id={v_id}
-                        getHelfer={getHelfer}
+                        createHelfer={createHelfer}
                     />
                 </Modal.Body>
             </Modal>

@@ -6,7 +6,7 @@ import { useCookies } from 'react-cookie';
 
 const { Column, HeaderCell, Cell } = Table;
 
-const VeranstaltungRezepte = () => {
+const VeranstaltungRezepteTable = () => {
     const [showModal, setShowModal] = useState()
     const params = useParams()
     const v_id = params.v_id
@@ -97,6 +97,11 @@ const VeranstaltungRezepte = () => {
                     <Cell dataKey="portionen" />
                 </Column>
 
+                <Column flexGrow={100} align="left">
+                    <HeaderCell>Verantwortlicher</HeaderCell>
+                    <Cell dataKey="u_email" />
+                </Column>
+
                 <Column flexGrow={100} align="right" fixed>
                     <HeaderCell></HeaderCell>
 
@@ -139,4 +144,4 @@ const VeranstaltungRezepte = () => {
     )
 };
 
-export default VeranstaltungRezepte;
+export default VeranstaltungRezepteTable;

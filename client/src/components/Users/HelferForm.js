@@ -19,28 +19,14 @@ const ernaehrungsform_default = {
 
 
 
-const HelferForm = ({ setShowHelferModal, v_id, getHelfer }) => {
+const HelferForm = ({ setShowHelferModal, createHelfer }) => {
     const [zusage, setZusage] = useState(null)
     const [anmerkung, setAnmerkung] = useState('')
     const [g_ernaehrungsform, setErnaerungsform] = useState(ernaehrungsform_default)
     const [u_email, setEmail] = useState('')
 
 
-    const createHelfer = async () => {
-        try {
-            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/veranstaltung_helfer/${v_id}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ u_email, zusage})
-            })
-            if (response.status === 200) {
-                setShowHelferModal(false)
-                getHelfer()
-            }
-        } catch (err) {
-            console.error(err)
-        }
-    }
+    
 
     return (
 
