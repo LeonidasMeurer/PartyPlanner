@@ -5,7 +5,7 @@ import VeranstaltungAufgabenForm from './VeranstaltungAufgabenForm';
 
 
 
-const VeranstaltungAufgabenModal = ({ showModal, setShowModal, v_id, createAufgabe, helfer }) => {
+const VeranstaltungAufgabenModal = ({ showModal, setShowModal, v_id, createAufgabe, helfer, selectedAufgabe, editMode, editAufgabe }) => {
 
     return (
         <>
@@ -25,6 +25,9 @@ const VeranstaltungAufgabenModal = ({ showModal, setShowModal, v_id, createAufga
                         v_id={v_id}
                         createAufgabe={createAufgabe}
                         helfer={helfer}
+                        selectedAufgabe={selectedAufgabe}
+                        editMode={editMode}
+                        editAufgabe={editAufgabe}
                     />
                 </Modal.Body>
             </Modal>

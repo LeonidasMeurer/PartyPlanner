@@ -3,6 +3,15 @@ import { useCookies } from 'react-cookie';
 import { Button, Form, ButtonToolbar } from 'rsuite';
 import { useNavigate } from 'react-router-dom';
 
+const u_ernaehrungsform = {
+    Omnivore: false,
+    Vegetarisch: false,
+    Vegan: false,
+    kein_Alkohol: false,
+    kein_Schweinefleisch: false,
+    Lactoseintolerant: false,
+    Glutenunverträglich: false
+}
 
 const Auth = () => {
     const [cookies, setCookie] = useCookies(null);
@@ -46,7 +55,7 @@ const Auth = () => {
         const response = await fetch(`${process.env.REACT_APP_SERVERURL}/${endpoint}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ u_email, password })
+            body: JSON.stringify({ u_email, password, u_ernaehrungsform })
         })
 
         const data = await response.json()

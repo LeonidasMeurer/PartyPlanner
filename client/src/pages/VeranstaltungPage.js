@@ -76,7 +76,7 @@ const VeranstaltungPage = () => {
                 <Nav.Item eventKey="5" icon={<BarLineChartIcon />} onClick={() => { navigate(`statistik`); setActiveKey('5') }} >
                   Statistik
                 </Nav.Item>
-                <Nav.Item eventKey="5" icon={<SentToUserIcon />} onClick={() => { navigate(`/guestpage/${params.v_id}`); setActiveKey('5') }} >
+                <Nav.Item eventKey="6" icon={<SentToUserIcon />} onClick={() => { navigate(`/guestpage/${params.v_id}`); setActiveKey('6') }} >
                   Gäste Seite
                 </Nav.Item>
               </Nav>

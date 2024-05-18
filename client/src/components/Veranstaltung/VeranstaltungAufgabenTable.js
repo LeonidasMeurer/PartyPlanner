@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Container, Table, PanelGroup, Button, Input, Text } from 'rsuite';
+import { Container, Table, PanelGroup, Button, Panel, Text } from 'rsuite';
 import HelferTable from "../Users/HelferTable";
 import GaesteTable from "../Gaeste/GaesteTable";
 import GuestModal from "../Gaeste/GaesteModal";
@@ -62,13 +62,13 @@ const VeranstaltungAufgabenTable = () => {
         }
     }
 
-    const editAufgabe = async (g_id, zusage) => {
+    const editAufgabe = async (a_id, a_name, a_beschreibung, u_id) => {
 
         try {
-            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/gast/${g_id}`, {
+            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/aufgabe/${a_id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ g_id, zusage })
+                body: JSON.stringify({ a_name, a_beschreibung, u_id })
             })
             console.log(response)
             if (response.status === 200) {
@@ -109,11 +109,11 @@ const VeranstaltungAufgabenTable = () => {
     }
 
     return (
-        <Container>
+        <Panel>
 
             <Table
-                wordWrap="break-all"
-                autoHeight
+                wordWrap="break-word"
+                autoHeight={true}
                 data={aufgaben}
             >
                 <Column flexGrow={60} align="left">
@@ -172,9 +172,12 @@ const VeranstaltungAufgabenTable = () => {
                     v_id={v_id}
                     createAufgabe={createAufgabe}
                     helfer={helfer}
+                    selectedAufgabe={selectedAufgabe}
+                    editMode={editMode}
+                    editAufgabe={editAufgabe}
                 />
             }
-        </Container>
+        </Panel>
     );
 }
 

@@ -15,6 +15,7 @@ import RezepteTable from './components/Rezepte/RezepteTable';
 import VeranstaltungRezepteTable from './components/Veranstaltung/VeranstaltungRezepteTable';
 import VeranstaltungTeilnehmerTable from './components/Veranstaltung/VeranstaltungTeilnehmerTable';
 import VeranstaltungAufgabenTable from './components/Veranstaltung/VeranstaltungAufgabenTable';
+import VeranstaltungStatistik from './components/Veranstaltung/VeranstaltungStatistik';
 
 
 const router = createBrowserRouter([
@@ -79,6 +80,10 @@ const router = createBrowserRouter([
       {
         path: '/veranstaltung/:v_id/aufgaben',
         element: <VeranstaltungAufgabenTable />
+      },
+      {
+        path: '/veranstaltung/:v_id/statistik',
+        element: <VeranstaltungStatistik />
       },
     ]
   },

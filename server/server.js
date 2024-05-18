@@ -28,13 +28,13 @@ app.use(express.json()); //req.body
 // USERS
 //singup
 app.post('/signup', async (req, res) => {
-  const { u_email, password } = req.body
+  const { u_email, password, u_ernaehrungsform } = req.body
   const salt = bcrypt.genSaltSync(10)
   const hashedPassword = bcrypt.hashSync(password, salt)
 
   try {
-    const users = await pool.query(`INSERT INTO users (u_email, hashed_password) VALUES ($1, $2) RETURNING *`,
-      [u_email, hashedPassword])
+    const users = await pool.query(`INSERT INTO users (u_email, hashed_password, u_ernaehrungsform) VALUES ($1, $2, $3) RETURNING *`,
+      [u_email, hashedPassword, u_ernaehrungsform])
 
     const token = jwt.sign({ u_email }, 'secret', { expiresIn: '1hr' })
 
@@ -442,6 +442,21 @@ app.post("/aufgabe", async (req, res) => {
     );
 
     res.json(aufgabe.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// update Aufgabe
+app.put("/aufgabe/:a_id", async (req, res) => {
+  const { a_id } = req.params
+  const { a_name, a_beschreibung, u_id } = req.body
+  try {
+    const editAufgabe = await pool.query(
+      "UPDATE aufgabe SET a_name = $1, a_beschreibung = $2, u_id = $3 WHERE a_id = $4 RETURNING *",
+      [a_name, a_beschreibung, u_id, a_id]
+    );
+    res.json(editAufgabe);
   } catch (err) {
     console.error(err.message);
   }

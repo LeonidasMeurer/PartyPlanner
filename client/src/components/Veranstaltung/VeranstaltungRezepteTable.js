@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useOutletContext, useParams } from 'react-router-dom';
-import { Table, Button } from 'rsuite';
+import { Table, Button, Panel } from 'rsuite';
 import VeranstaltungRezepteModal from './VeranstaltungRezepteModal';
 import { useCookies } from 'react-cookie';
 
@@ -70,8 +70,14 @@ const VeranstaltungRezepteTable = () => {
         getUserRezepte();
     }, []);
 
+    if (!rezepte || !userRezepte) {
+        return (
+            <p>loading</p>
+        )
+    }
+
     return (
-        <>
+        <Panel>
             <Table
                 rowHeight={50}
                 autoHeight
@@ -140,7 +146,7 @@ const VeranstaltungRezepteTable = () => {
             }
 
 
-        </>
+        </Panel>
     )
 };
 

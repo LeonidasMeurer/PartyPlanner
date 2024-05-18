@@ -1,4 +1,4 @@
-import { Table, Button } from 'rsuite';
+import { Table, Panel } from 'rsuite';
 import { useCookies } from 'react-cookie'
 import { useEffect, useState } from 'react';
 import { Link, useParams, useOutletContext } from 'react-router-dom';
@@ -16,12 +16,12 @@ const VeranstaltungDashboard = () => {
     }
 
     return (
-        <div style={{paddingLeft: "20px", paddingTop: '20px'}}>
+        <Panel>
            <VeranstaltungFrom
                 veranstaltung={veranstaltung[0]}
                 editMode={true}
             />
-        </div>
+        </Panel>
     )
 };
 

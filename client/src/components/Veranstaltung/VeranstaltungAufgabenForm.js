@@ -11,13 +11,13 @@ const zusageData = [
 
 const Textarea = forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
-const VeranstaltungAufgabenForm = ({ setShowModal, createAufgabe, helfer }) => {
+const VeranstaltungAufgabenForm = ({ setShowModal, createAufgabe, helfer, selectedAufgabe, editMode, editAufgabe }) => {
     const [cookies, setCookie, removeCookie] = useCookies();
     const u_email = cookies.userEmail
     const [zusage, setZusage] = useState(null)
-    const [a_name, setName] = useState('')
-    const [beschreibung, setBeschreibung] = useState('')
-    const [u_id, setSelectedHelferId] = useState(cookies.userId)
+    const [a_name, setName] = useState(editMode ? selectedAufgabe.a_name : '')
+    const [beschreibung, setBeschreibung] = useState(editMode ? selectedAufgabe.a_beschreibung : '')
+    const [u_id, setSelectedHelferId] = useState(editMode ? selectedAufgabe.u_id : cookies.userId)
     const params = useParams()
     const v_id = params.v_id
 
@@ -41,6 +41,14 @@ const VeranstaltungAufgabenForm = ({ setShowModal, createAufgabe, helfer }) => {
         setSelectedHelferId(result[0].r_id)
     }
 
+    const onSubmit = () => {
+        if (!editMode) {
+            createAufgabe(a_name, beschreibung, u_id, v_id)
+        } else {
+            editAufgabe(selectedAufgabe.a_id, a_name, beschreibung, u_id)
+        }
+        setShowModal(false)
+    }
 
     return (
 
@@ -59,7 +67,7 @@ const VeranstaltungAufgabenForm = ({ setShowModal, createAufgabe, helfer }) => {
                     <Form.Control
                         rows={5}
                         accepter={Textarea}
-                        defaultValue={''}
+                        defaultValue={beschreibung}
                         name="beschreibung"
                         onChange={(e) => setBeschreibung(e)}
                     />
@@ -69,7 +77,7 @@ const VeranstaltungAufgabenForm = ({ setShowModal, createAufgabe, helfer }) => {
                     <Form.ControlLabel>Meine Helfer</Form.ControlLabel>
                     <SelectPicker
                         data={helferParsed}
-                        defaultValue={u_email}
+                        defaultValue={editMode ? selectedAufgabe.u_email : u_email}
                         searchable={false}
                         style={{ width: 300 }}
                         onChange={(e) => { changeHelfer(e); console.log('TEST', e) }}
@@ -77,7 +85,7 @@ const VeranstaltungAufgabenForm = ({ setShowModal, createAufgabe, helfer }) => {
                 </Form.Group>
 
                 <ButtonToolbar style={{ marginTop: '10px' }}>
-                    <Button onClick={() => { createAufgabe(a_name, beschreibung, u_id, v_id) }} appearance="primary">
+                    <Button onClick={() => { onSubmit() }} appearance="primary">
                         Submit
                     </Button>
                     <Button onClick={() => setShowModal(false)} appearance="subtle">

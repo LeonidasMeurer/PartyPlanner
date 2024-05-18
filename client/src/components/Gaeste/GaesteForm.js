@@ -12,6 +12,7 @@ const ernaehrungsform_default = {
     Vegetarisch: false,
     Vegan: false,
     kein_Alkohol: false,
+    Alkohol: false,
     kein_Schweinefleisch: false,
     Lactoseintolerant: false,
     Glutenunverträglich: false
@@ -85,6 +86,10 @@ const GuestForm = ({ setShowModal, v_id, createGuest }) => {
                             value={"kein_Alkohol"}
                             onChange={(value) => changeErnaerungsform(value)}
                         >kein_Alkohol</Checkbox>
+                        <Checkbox
+                            value={"Alkohol"}
+                            onChange={(value) => changeErnaerungsform(value)}
+                        >Alkohol</Checkbox>
                         <Checkbox
                             value={"kein_Schweinefleisch"}
                             onChange={(value) => changeErnaerungsform(value)}
