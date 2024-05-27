@@ -58,7 +58,7 @@ const VeranstaltungPage = () => {
           width={260}
           collapsible
         >
-          <Sidenav appearance='inverse' defaultOpenKeys={['3', '4']} style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+          <Sidenav appearance='inverse' defaultOpenKeys={['3', '4']} style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <Sidenav.Body>
               <Nav activeKey={activeKey}>
                 <Nav.Item eventKey="1" icon={<DashboardIcon />} onClick={() => { navigate(``); setActiveKey('1') }}>
