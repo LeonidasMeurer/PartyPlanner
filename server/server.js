@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const cors = require('cors');
 const pool = require('./db')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 //middleware
@@ -476,7 +476,7 @@ app.delete("/aufgabe/:a_id", async (req, res) => {
 });
 
 
-app.listen(5000, () => {
-  console.log("server has started on port 5000");
+app.listen(process.env.NODE_DOCKER_PORT, () => {
+  console.log(`server has started on port ${process.env.NODE_DOCKER_PORT}`);
 });
 
