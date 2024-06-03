@@ -30,6 +30,7 @@ services:
       - DB_PORT=$POSTGRESDB_DOCKER_PORT
     volumes:
       - ./server:/usr/src/app
+      - /usr/src/app/node_modules
     stdin_open: true
     tty: true
 
@@ -42,4 +43,5 @@ services:
       - "80:3000"
     volumes:
       - ./client:/usr/src/app
+      - /usr/src/app/node_modules
 
