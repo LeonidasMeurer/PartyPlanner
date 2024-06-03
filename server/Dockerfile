@@ -11,6 +11,4 @@ RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
 
 COPY . /usr/src/app
 
-EXPOSE 5000
-
 CMD ["npm", "start"]
