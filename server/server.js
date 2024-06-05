@@ -10,19 +10,33 @@ const jwt = require('jsonwebtoken')
 app.use(cors());
 app.use(express.json()); //req.body
 
-// Test Connection
-/* (async () => {
-
-  try {
-    const response = await pool.query("SELECT current_user");
-    const { rows } = response;
-    const currentUser = rows[0]['current_user'];
-    console.log(currentUser);  // postgres
-  } catch (err) {
-    console.log(err);
+/* app.use(express.json());
+app.use(function(req, res, next) {
+  var oneof = false;
+  if(req.headers.origin) {
+      res.header('Access-Control-Allow-Origin', req.headers.origin);
+      oneof = true;
+  }
+  if(req.headers['access-control-request-method']) {
+      res.header('Access-Control-Allow-Methods', req.headers['access-control-request-method']);
+      oneof = true;
+  }
+  if(req.headers['access-control-request-headers']) {
+      res.header('Access-Control-Allow-Headers', req.headers['access-control-request-headers']);
+      oneof = true;
+  }
+  if(oneof) {
+      res.header('Access-Control-Max-Age', 60 * 60 * 24 * 365);
   }
 
-})(); */
+  // intercept OPTIONS method
+  if (oneof && req.method == 'OPTIONS') {
+      res.send(200);
+  }
+  else {
+      next();
+  }
+}); */
 
 
 // USERS
